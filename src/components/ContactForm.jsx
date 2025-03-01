@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { addContact } from "contactsSlice";
 import { useDispatch } from "react-redux";
+import { addContact } from '../redux/contactsSlice';
 
 export const ContactForm = () => {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
-
   const dispatch = useDispatch();
 
   const handleAddContact = () => {
@@ -26,7 +25,7 @@ export const ContactForm = () => {
       />
       <input
         type="tel"
-        placeholder="Phone Number"
+        placeholder="Phone number"
         onChange={(e) => setNumber(e.target.value)}
         value={number}
       />
