@@ -22,7 +22,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  /*height: 100vh;*/
 }
 
 /* App container */
@@ -70,15 +70,13 @@ div > div {
   padding: 10px;
   margin-top: 10px;
   border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 div > div button {
   width: auto;
   background: #dc3545;
   font-size: 14px;
+  
 }
 
 div > div button:hover {

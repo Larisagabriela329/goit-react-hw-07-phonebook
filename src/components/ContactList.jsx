@@ -10,7 +10,12 @@ export const ContactList = () => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
+  /*const handleRemoveContact = (id) => {
+    dispatch(deleteContact(id));
+  };*/
+
   const handleRemoveContact = (id) => {
+    console.log("Clicked delete for contact ID:", id); // Debugging log
     dispatch(deleteContact(id));
   };
 
@@ -20,7 +25,7 @@ export const ContactList = () => {
   if (!Array.isArray(items)) {
     return <p>No contacts available</p>;
   }
-
+  
   return (
     <div>
       <h1>Contacts List</h1>
