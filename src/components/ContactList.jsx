@@ -17,7 +17,6 @@ export const ContactList = () => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  // Add a check to ensure `items` is an array
   if (!Array.isArray(items)) {
     return <p>No contacts available</p>;
   }
