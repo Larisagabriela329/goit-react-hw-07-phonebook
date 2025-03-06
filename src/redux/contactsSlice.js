@@ -1,27 +1,27 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import contactsService from "service/contactsService";
 
-
 const initialState = {
   contacts: {
     items: [],
     isLoading: false,
-    error: null
+    error: null,
   },
   filter: "",
 };
 
-export const fetchContacts = createAsyncThunk('contacts/fetchAll', async () => {
-  return contactsService.fetchContacts()
-})
+// ✅ Fix: Pass `contactId` as a parameter
+export const fetchContacts = createAsyncThunk("contacts/fetchAll", async () => {
+  return contactsService.fetchContacts();
+});
 
-export const addContact = createAsyncThunk('contacts/addContact', async() => {
-  return contactsService.addContact()
-})
+export const addContact = createAsyncThunk("contacts/addContact", async (newContact) => {
+  return contactsService.addContact(newContact);
+});
 
-export const deleteContact = createAsyncThunk('contacts/deleteContact', async ()=> {
-  return contactsService.deleteContact()
-})
+export const deleteContact = createAsyncThunk("contacts/deleteContact", async (contactId) => {
+  return contactsService.deleteContact(contactId);
+});
 
 const contactsSlice = createSlice({
   name: "contacts",
@@ -29,34 +29,39 @@ const contactsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(fetchContacts.pending, (state, _action)=>{
-      state.status = 'loading'
-    })
-    .addCase(fetchContacts.fulfilled, (state, action)=> {
-      state.status = 'success';
-      state.items = action.payload;
-    })
-    .addCase(fetchContacts.rejected, (state, action)=> {
-      state.status = 'failed';
-      state.error = action.error.message
-    })
+      // ✅ Fetch Contacts
+      .addCase(fetchContacts.pending, (state) => {
+        state.contacts.isLoading = true;
+        state.contacts.error = null;
+      })
+      .addCase(fetchContacts.fulfilled, (state, action) => {
+        state.contacts.isLoading = false;
+        state.contacts.items = action.payload;
+      })
+      .addCase(fetchContacts.rejected, (state, action) => {
+        state.contacts.isLoading = false;
+        state.contacts.error = action.error.message;
+      })
 
-    .addCase(addContact.fulfilled, (state, action) => {
-      state.items.push(action.payload)
-    })
-    .addCase(addContact.rejected, (state, action) => {
-      state.error = action.error.message;
-    })
+      // ✅ Add Contact
+      .addCase(addContact.fulfilled, (state, action) => {
+        state.contacts.items.push(action.payload);
+      })
+      .addCase(addContact.rejected, (state, action) => {
+        state.contacts.error = action.error.message;
+      })
 
-    .addCase(deleteContact.fulfilled, (state, action) => {
-      const index = state.items.findIndex(el => el.id === action.payload)
+      // ✅ Delete Contact
 
-      state.items.splice(index, 1)
-    })
-    .addCase(deleteContact.rejected, (state, action) => {
-      state.error = action.payload.error
-  })
-}
+      
+      .addCase(deleteContact.fulfilled, (state, action) => {
+        const deletedId = action.payload.id; // API should return deleted contact ID
+        state.contacts.items = state.contacts.items.filter((el) => el.id !== deletedId);
+      })
+      .addCase(deleteContact.rejected, (state, action) => {
+        state.contacts.error = action.error.message; // Fix: Use `action.error.message`
+      });
+  },
 });
 
 export const contactsReducer = contactsSlice.reducer;
