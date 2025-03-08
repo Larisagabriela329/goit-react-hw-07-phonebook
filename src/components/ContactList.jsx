@@ -1,48 +1,23 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchContacts, deleteContact } from "../redux/contactsSlice";
+import PropTypes from 'prop-types';
+import ContactItem from './contactItem';
 
-export const ContactList = () => {
-  const { items, isLoading, error } = useSelector((state) => state.contacts);
-  const dispatch = useDispatch();
+const ContactList = ({ contacts, onDeleteContact }) => (
+  <ul>
+    {contacts.map(contact => (
+      <ContactItem key={contact.id} {...contact} onDeleteContact={onDeleteContact} />
+    ))}
+  </ul>
+);
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
-
-  /*const handleRemoveContact = (id) => {
-    dispatch(deleteContact(id));
-  };*/
-
-  const handleRemoveContact = (id) => {
-    console.log("Clicked delete for contact ID:", id); // Debugging log
-    dispatch(deleteContact(id));
-  };
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
-  if (!Array.isArray(items)) {
-    return <p>No contacts available</p>;
-  }
-  
-  return (
-    <div>
-      <h1>Contacts List</h1>
-      {items.length === 0 ? (
-        <p>No contacts to display</p>
-      ) : (
-        items.map((contact) => (
-          <div key={contact.id}>
-            <p>
-              {contact.name} - {contact.number}
-            </p>
-            <button onClick={() => handleRemoveContact(contact.id)}>
-              Delete
-            </button>
-          </div>
-        ))
-      )}
-    </div>
-  );
+ContactList.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onDeleteContact: PropTypes.func.isRequired
 };
+
+export default ContactList;

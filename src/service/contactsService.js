@@ -1,32 +1,32 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "https://67c2f1741851890165adb703.mockapi.io";
+axios.defaults.baseURL = "https://67c2f1741851890165adb703.mockapi.io/contacts/";
 
-// ✅ Corrected fetchContacts endpoint
+debugger;
 const fetchContacts = async () => {
     try {
-        const response = await axios.get('/contacts'); // Fix: changed '/contact' to '/contacts'
+        const response = await axios.get('/contacts');
+        console.log(response.data);
         return response.data; 
     } catch (error) {
-        throw new Error(error.response?.data?.message || 'Error fetching contacts');
+        throw new Error('Error fetching contacts');
     }
 };
 
-// ✅ Ensure `contact` is passed correctly
 const addContact = async (contact) => { 
     try {
         const response = await axios.post('/contacts', contact); 
         return response.data;
     } catch (error) {
-        throw new Error(error.response?.data?.message || 'Contact was not added!');
+        throw new Error('Contact was not added!');
     }
 };
 
-// ✅ Fix delete response to return { id: contactId }
+
 const deleteContact = async (contactId) => { 
     try {
-        await axios.delete(`/contacts/${contactId}`); // MockAPI returns {}
-        return { id: contactId }; // Return an object with ID for Redux
+        await axios.delete(`/contacts/${contactId}`); 
+        return { id: contactId }; 
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Contact was not deleted!');
     }
@@ -36,6 +36,6 @@ const contactsService = {
     fetchContacts,
     addContact,
     deleteContact
-};
+}
 
 export default contactsService;
